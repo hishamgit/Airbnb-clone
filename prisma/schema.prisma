@@ -16,7 +16,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Home         Home[]
+  Home          Home[]
+  Favourites    Favourites[]
  
   @@map("users")
 }
@@ -81,4 +82,11 @@ model Home{
   addedLocation Boolean @default(false)
 
   createdAt DateTime  @default(now())
+}
+
+model Favourites{
+  id String @id @default(uuid())
+  userid String?
+  user User? @relation(fields: [userid],references: [id])
+  Home 
 }

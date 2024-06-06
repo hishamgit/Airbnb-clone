@@ -6,6 +6,8 @@ export function Noitems() {
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
         <File  className="h-10 w-10 text-primary"/>
       </div>
+      <h2 className="mt-5 text-xl font-semibold ">Sorry no listings found for this category..</h2>
+      <p className="text-muted-foreground mt-2 text-sm text-center leading-6">Please select another category or create your own listing!</p>
     </div>
   );
 }
