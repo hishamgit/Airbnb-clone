@@ -9,7 +9,8 @@ import { getServerSession } from "next-auth";
 import { SignInButton } from "./Signin";
 import Link from "next/link";
 import { OPTIONS } from "../api/auth/[...nextauth]/route";
-import {  createHomewithId } from "../actions";
+import { createHome } from "../actions";
+import React from "react";
 
 export default async function UserNav() {
   const session = await getServerSession(OPTIONS);
@@ -37,7 +38,7 @@ export default async function UserNav() {
           {user ? (
             <>
               <DropdownMenuItem>
-                <form action={createHomewithId} className="w-full">
+                <form action={createHome} className="w-full">
                   <button type="submit" className="w-full text-start">
                     Create new listing
                   </button>

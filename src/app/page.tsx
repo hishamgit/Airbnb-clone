@@ -4,11 +4,15 @@ import Mapfilter from "./components/Mapfilteritems";
 import prisma from "./lib/db";
 import { SkeletonCard } from "./components/SkeletonCard";
 import { Noitems } from "./components/NoItems";
+import { getServerSession } from "next-auth";
+import { OPTIONS } from "./api/auth/[...nextauth]/route";
 
 const fetchData = async ({
   searchParams,
+  userId,
 }: {
   searchParams: { category: string };
+  userId: string | undefined;
 }) => {
   const data = await prisma.home.findMany({
     where: {
@@ -24,9 +28,17 @@ const fetchData = async ({
       description: true,
       price: true,
       country: true,
+      favourites: { where: { userId: userId }, select: { id: true } },
     },
   });
-  return data;
+
+  const processedData = data.map((home) => ({
+    ...home,
+    isInFavoriteList: home.favourites.length > 0,
+  }));
+  processedData.forEach((home) => delete home.favourites);
+
+  return processedData;
 };
 
 export default async function Home({
@@ -49,7 +61,15 @@ async function ShowData({
 }: {
   searchParams: { category: string };
 }) {
-  const data = await fetchData({ searchParams });
+  const session = await getServerSession(OPTIONS);
+  const email = session?.user?.email;
+  const userId = await prisma.user.findUnique({
+    where: { email: email as string },
+  });
+  const data = await fetchData({
+    searchParams,
+    userId: userId?.id,
+  });
   return (
     <>
       {data.length === 0 ? (
@@ -65,6 +85,8 @@ async function ShowData({
               country={item.country as string}
               price={item.price as number}
               title={item.title as string}
+              userId={userId?.id}
+              isInFavoriteList={item.isInFavoriteList as boolean}
             />
           ))}
         </div>

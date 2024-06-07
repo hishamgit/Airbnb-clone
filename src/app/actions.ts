@@ -6,11 +6,18 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "./api/auth/[...nextauth]/route";
 import { supabase } from "@/lib/supabase";
 import { useCountries } from "./lib/getCountries";
+import { revalidatePath } from "next/cache";
 
-export async function createHome({ userId }: { userId: string }) {
+export async function createHome() {
+  const session = await getServerSession(OPTIONS);
+  const user = session?.user;
+  const id = await prisma.user.findUnique({
+    where: { email: user?.email! },
+  });
+
   const home = await prisma.home.findFirst({
     where: {
-      userId,
+      userId: id?.id,
     },
     orderBy: {
       createdAt: "desc",
@@ -20,7 +27,7 @@ export async function createHome({ userId }: { userId: string }) {
   if (!home) {
     const newHome = await prisma.home.create({
       data: {
-        userId,
+        userId: id?.id,
       },
     });
     return redirect(`/create/${newHome.id}/structure`);
@@ -45,20 +52,11 @@ export async function createHome({ userId }: { userId: string }) {
   ) {
     const newHome = await prisma.home.create({
       data: {
-        userId,
+        userId: id?.id,
       },
     });
     return redirect(`/create/${newHome.id}/structure`);
   }
-}
-
-export async function createHomewithId() {
-  const session = await getServerSession(OPTIONS);
-  const user = session?.user;
-  const id = await prisma.user.findUnique({
-    where: { email: user?.email! },
-  });
-  await createHome({ userId: id?.id! });
 }
 
 export async function createCategoryPage(formData: FormData) {
@@ -127,4 +125,34 @@ export async function createLocation(formData: FormData) {
   redirect(`/`);
 }
 
+export async function DeleteFromFavorite(formData: FormData) {
+  const homeId = formData.get("homeId") as string;
+  const userId = formData.get("userId") as string;
 
+  const data = await prisma.favourite.delete({
+    where: {
+      userId_homeId: {
+        userId ,
+        homeId 
+      },
+      userId,
+      homeId,
+    },
+  });
+
+  revalidatePath("/");
+}
+
+export async function addToFavorite(formData: FormData) {
+  const homeId = formData.get("homeId") as string;
+  const userId = formData.get("userId") as string;
+
+  const data = await prisma.favourite.create({
+    data: {
+      homeId: homeId,
+      userId: userId,
+    },
+  });
+
+  revalidatePath("/");
+}

@@ -12,3 +12,8 @@ declare module "next-auth" {
     id: string;
   }
 }
+
+type FormStatus = {
+  pending: boolean;
+  setPending: React.Dispatch<React.SetStateAction<boolean>>;
+};
