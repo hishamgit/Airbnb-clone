@@ -58,11 +58,9 @@ export function CardListing({
           </div>
         )}
       </div>
-      <Link href="/">
         <h3 className="font-medium text-base">
           {location?.flag} {location?.label} / {location?.region}
         </h3>
-      </Link>
       <p className="text-sm text-muted-foreground line-clamp-2">
         {description}
       </p>

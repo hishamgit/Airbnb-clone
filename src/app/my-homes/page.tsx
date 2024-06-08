@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import { CardListing } from "./components/CardListing";
-import Mapfilter from "./components/Mapfilteritems";
-import prisma from "./lib/db";
-import { SkeletonCard } from "./components/SkeletonCard";
-import { Noitems } from "./components/NoItems";
 import { getServerSession } from "next-auth";
-import { OPTIONS } from "./api/auth/[...nextauth]/route";
+import prisma from "../lib/db";
+import Mapfilter from "../components/Mapfilteritems";
+import { OPTIONS } from "../api/auth/[...nextauth]/route";
+import { Noitems } from "../components/NoItems";
+import { CardListing } from "../components/CardListing";
+import { SkeletonCard } from "../components/SkeletonCard";
 import Link from "next/link";
 
 const fetchData = async ({
@@ -21,6 +21,7 @@ const fetchData = async ({
       addedDescription: true,
       addedLocation: true,
       categoryName: searchParams.category,
+      userId: userId,
     },
     select: {
       id: true,
@@ -29,7 +30,7 @@ const fetchData = async ({
       description: true,
       price: true,
       country: true,
-      favourites: { where: { userId: userId }, select: { id: true } },
+      favourites: { where: { userId: userId } },
     },
   });
 
@@ -50,6 +51,7 @@ export default async function Home({
   return (
     <div className="container mx-auto px-5 lg:px-10">
       <Mapfilter />
+      <h1 className="text-3xl font-bold pt-8">Your Homes</h1>
       <Suspense key={searchParams.category} fallback={renderSkeletonCards()}>
         <ShowData searchParams={searchParams} />
       </Suspense>
