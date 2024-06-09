@@ -7,16 +7,18 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
 model User {
-  id            String      @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?     @unique
-  emailVerified DateTime?   @map("email_verified")
+  email         String?       @unique
+  emailVerified DateTime?     @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
   homes         Home[]
-  favourites    Favourite[] 
+  favourites    Favourite[]
+  reservations  Reservation[]
 
   @@map("users")
 }
@@ -61,20 +63,21 @@ model VerificationToken {
 }
 
 model Home {
-  id           String      @id @default(uuid())
-  title        String?
-  description  String?
-  guests       String?
-  bedrooms     String?
-  bathroom     String?
-  country      String?
-  photo        String?
-  price        Int?
+  id          String  @id @default(uuid())
+  title       String?
+  description String?
+  guests      String?
+  bedrooms    String?
+  bathroom    String?
+  country     String?
+  photo       String?
+  price       Int?
 
   userId       String?
-  user         User?       @relation(fields: [userId], references: [id])
+  user         User?         @relation(fields: [userId], references: [id])
   categoryName String?
-  favourites    Favourite[]
+  favourites   Favourite[]
+  reservations Reservation[]
 
   addedCategory    Boolean @default(false)
   addedDescription Boolean @default(false)
@@ -90,7 +93,21 @@ model Favourite {
 
   Home   Home?   @relation(fields: [homeId], references: [id])
   homeId String?
-  
+
   createdAt DateTime @default(now())
-  @@unique([userId, homeId]) 
+
+  @@unique([userId, homeId])
+}
+
+model Reservation {
+  id String @id @default(uuid())
+
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  Home   Home?   @relation(fields: [homeId], references: [id])
+  homeId String?
 }

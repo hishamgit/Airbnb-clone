@@ -6,6 +6,10 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import MapHome from "@/app/components/MapHome";
 import Calender from "@/app/components/calender";
+import { createReservation } from "@/app/actions";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { CreateReservationButton } from "@/app/components/SubmitButtons";
 
 const fetchData = async (id: string) => {
   const data = await prisma.home.findUnique({
@@ -22,11 +26,21 @@ const fetchData = async (id: string) => {
       bathroom: true,
       bedrooms: true,
       guests: true,
+      reservations: {
+        where: {
+          homeId: id,
+        },
+        select: {
+          startDate: true,
+          endDate: true,
+        },
+      },
       user: {
         select: {
           name: true,
           image: true,
           email: true,
+          id: true,
         },
       },
     },
@@ -46,7 +60,7 @@ export default async function HomeDetails({
   const { data: photo } = supabase.storage
     .from("image-bucket-anb")
     .getPublicUrl(data?.photo as string);
-
+  console.log(data?.reservations, "reservations");
   return (
     <div className="w-[75%] mx-auto mt-10 mb-10">
       <h1 className="font-medium text-2xl mb-5">{data?.title}</h1>
@@ -90,7 +104,18 @@ export default async function HomeDetails({
           <Separator className="my-8" />
           <MapHome locationValue={data?.country as string} />
         </div>
-        <Calender/>
+        <form action={createReservation}>
+          <input type="hidden" name="homeId" value={params.id} />
+          <input type="hidden" name="userId" value={data?.user?.id} />
+          <Calender reservation={data?.reservations} />
+          {data?.user ? (
+           <CreateReservationButton/>
+          ) : (
+            <Link href={"/api/auth/login"}>
+              <Button className="w-full">Make a reservation</Button>
+            </Link>
+          )}
+        </form>
       </div>
     </div>
   );

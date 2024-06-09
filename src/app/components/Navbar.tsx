@@ -21,9 +21,7 @@ const Navbar = () => {
             className="block lg:hidden w-12"
           />
         </Link>
-        <div className="rounded-full border px-5 py-2 ">
-          <h1>Hi from search</h1>
-        </div>
+        
         <UserNav/>
       </div>
     </nav>

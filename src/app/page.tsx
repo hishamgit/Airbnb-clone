@@ -7,6 +7,8 @@ import { Noitems } from "./components/NoItems";
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "./api/auth/[...nextauth]/route";
 import Link from "next/link";
+import ClientRedirect from "./components/clientRedirect";
+import { redirect } from "next/navigation";
 
 const fetchData = async ({
   searchParams,
@@ -47,6 +49,11 @@ export default async function Home({
 }: {
   searchParams: { category: string };
 }) {
+  const session = await getServerSession(OPTIONS);
+  if (!session?.user) {
+    // Redirect to the login page if the user is not authenticated
+    redirect("/api/auth/signin");
+  }
   return (
     <div className="container mx-auto px-5 lg:px-10">
       <Mapfilter />

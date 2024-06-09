@@ -37,6 +37,11 @@ export default async function UserNav() {
         <DropdownMenuContent align="end" className="w-[200px]">
           {user ? (
             <>
+            <DropdownMenuItem>
+                <Link href="/" className="w-full">
+                 Home
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <form action={createHome} className="w-full">
                   <button type="submit" className="w-full text-start">

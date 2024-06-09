@@ -132,8 +132,8 @@ export async function DeleteFromFavorite(formData: FormData) {
   const data = await prisma.favourite.delete({
     where: {
       userId_homeId: {
-        userId ,
-        homeId 
+        userId,
+        homeId,
       },
       userId,
       homeId,
@@ -155,4 +155,20 @@ export async function addToFavorite(formData: FormData) {
   });
 
   revalidatePath("/");
+}
+export async function createReservation(formData: FormData) {
+  const homeId = formData.get("homeId") as string;
+  const userId = formData.get("userId") as string;
+  const startDate = formData.get("startDate") as string;
+  const endDate = formData.get("endDate") as string;
+
+  const data = await prisma.reservation.create({
+    data: {
+      homeId,
+      userId,
+      startDate,
+      endDate,
+    },
+  });
+  redirect("/")
 }

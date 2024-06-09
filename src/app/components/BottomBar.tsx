@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SubmitButton } from "./SubmitButton";
+import { SubmitButton } from "./SubmitButtons";
 
 export function BottomBar() {
   return (

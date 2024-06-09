@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import prisma from "../lib/db";
 import { OPTIONS } from "../api/auth/[...nextauth]/route";
-import { NoItemsFavorites } from "../components/NoItems";
+import { NoItemsBookings} from "../components/NoItems";
 import { CardListing } from "../components/CardListing";
 import { SkeletonCard } from "../components/SkeletonCard";
 import Link from "next/link";
@@ -13,7 +13,7 @@ const fetchData = async ({ userId }: { userId: string | undefined }) => {
       addedCategory: true,
       addedDescription: true,
       addedLocation: true,
-      favourites: { some: { userId: userId } },
+      reservations: { some: { userId: userId } },
     },
     select: {
       id: true,
@@ -61,10 +61,10 @@ async function ShowData() {
   return (
     <div className="pb-20">
       {data.length === 0 ? (
-        <NoItemsFavorites />
+        <NoItemsBookings />
       ) : (
         <>
-          <h1 className="text-3xl font-bold pt-8">Your Favorites</h1>
+          <h1 className="text-3xl font-bold pt-8">Your Bookings</h1>
           <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 mt-8 gap-8">
             {data.map((item) => (
               <Link key={item.id} href={`/home/${item.id}`}>

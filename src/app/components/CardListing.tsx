@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { useCountries } from "../lib/getCountries";
-import { AddToFavoriteButton, DeleteFromFavoriteButton } from "./SubmitButton";
+import { AddToFavoriteButton, DeleteFromFavoriteButton } from "./SubmitButtons";
 import { DeleteFromFavorite, addToFavorite } from "../actions";
 
 interface iAppProps {
