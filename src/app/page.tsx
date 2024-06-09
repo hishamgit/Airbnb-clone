@@ -7,14 +7,19 @@ import { Noitems } from "./components/NoItems";
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "./api/auth/[...nextauth]/route";
 import Link from "next/link";
-import ClientRedirect from "./components/clientRedirect";
 import { redirect } from "next/navigation";
 
 const fetchData = async ({
   searchParams,
   userId,
 }: {
-  searchParams: { category: string };
+  searchParams: {
+    category?: string;
+    locationValue?: string;
+    guest?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+  };
   userId: string | undefined;
 }) => {
   const data = await prisma.home.findMany({
@@ -22,7 +27,11 @@ const fetchData = async ({
       addedCategory: true,
       addedDescription: true,
       addedLocation: true,
-      categoryName: searchParams.category,
+      categoryName: searchParams?.category ?? undefined,
+      country: searchParams?.locationValue ?? undefined,
+      guests: searchParams?.guest ?? undefined,
+      bedrooms: searchParams?.bedrooms ?? undefined,
+      bathroom: searchParams?.bathrooms ?? undefined,
     },
     select: {
       id: true,
@@ -47,7 +56,13 @@ const fetchData = async ({
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { category: string };
+  searchParams: {
+    category?: string;
+    locationValue?: string;
+    guest?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+  };
 }) {
   const session = await getServerSession(OPTIONS);
   if (!session?.user) {
@@ -67,7 +82,13 @@ export default async function Home({
 async function ShowData({
   searchParams,
 }: {
-  searchParams: { category: string };
+  searchParams: {
+    category?: string;
+    locationValue?: string;
+    guest?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+  };
 }) {
   const session = await getServerSession(OPTIONS);
   const email = session?.user?.email;
