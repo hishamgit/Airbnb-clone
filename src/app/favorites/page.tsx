@@ -5,8 +5,11 @@ import { NoItemsFavorites } from "../components/NoItems";
 import { CardListing } from "../components/CardListing";
 import { SkeletonCard } from "../components/SkeletonCard";
 import Link from "next/link";
+import {unstable_noStore as noStore} from "next/cache"
+
 
 const fetchData = async ({ userId }: { userId: string | undefined }) => {
+  noStore();
   const data = await prisma.home.findMany({
     where: {
       addedCategory: true,

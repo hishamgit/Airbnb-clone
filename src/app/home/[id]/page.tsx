@@ -10,8 +10,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CreateReservationButton } from "@/app/components/SubmitButtons";
 import Calender from "@/app/components/Calender";
+import {unstable_noStore as noStore} from "next/cache"
+
 
 const fetchData = async (id: string) => {
+noStore();
   const data = await prisma.home.findUnique({
     where: {
       id,

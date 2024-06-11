@@ -7,6 +7,7 @@ import { Noitems } from "./components/NoItems";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import {unstable_noStore as noStore} from "next/cache"
 
 const fetchData = async ({
   searchParams,
@@ -21,6 +22,7 @@ const fetchData = async ({
   };
   userId: string | undefined;
 }) => {
+  noStore();
   const data = await prisma.home.findMany({
     where: {
       addedCategory: true,
