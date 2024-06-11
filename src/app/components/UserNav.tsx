@@ -8,12 +8,11 @@ import {
 import { getServerSession } from "next-auth";
 import { SignInButton } from "./Signin";
 import Link from "next/link";
-import { OPTIONS } from "../api/auth/[...nextauth]/route";
 import { createHome } from "../actions";
 import React from "react";
 
 export default async function UserNav() {
-  const session = await getServerSession(OPTIONS);
+  const session = await getServerSession();
 
   const user = session?.user;
 

@@ -3,12 +3,11 @@
 import { redirect } from "next/navigation";
 import prisma from "./lib/db";
 import { getServerSession } from "next-auth";
-import { OPTIONS } from "./api/auth/[...nextauth]/route";
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
 export async function createHome() {
-  const session = await getServerSession(OPTIONS);
+  const session = await getServerSession();
   const user = session?.user;
   const id = await prisma.user.findUnique({
     where: { email: user?.email! },

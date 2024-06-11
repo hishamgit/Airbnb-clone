@@ -5,7 +5,6 @@ import prisma from "./lib/db";
 import { SkeletonCard } from "./components/SkeletonCard";
 import { Noitems } from "./components/NoItems";
 import { getServerSession } from "next-auth";
-import { OPTIONS } from "./api/auth/[...nextauth]/route";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -48,9 +47,12 @@ const fetchData = async ({
     ...home,
     isInFavoriteList: home.favourites.length > 0,
   }));
-  processedData.forEach((home) => delete home.favourites);
+  const newData = processedData.map((home) => {
+    const { favourites, ...newHome } = home;
+    return newHome;
+  });
 
-  return processedData;
+  return newData;
 };
 
 export default async function Home({
@@ -64,7 +66,7 @@ export default async function Home({
     bathrooms?: string;
   };
 }) {
-  const session = await getServerSession(OPTIONS);
+  const session = await getServerSession();
   if (!session?.user) {
     // Redirect to the login page if the user is not authenticated
     redirect("/api/auth/signin");
@@ -90,7 +92,7 @@ async function ShowData({
     bathrooms?: string;
   };
 }) {
-  const session = await getServerSession(OPTIONS);
+  const session = await getServerSession();
   const email = session?.user?.email;
   const userId = await prisma.user.findUnique({
     where: { email: email as string },

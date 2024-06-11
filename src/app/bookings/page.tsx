@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import prisma from "../lib/db";
-import { OPTIONS } from "../api/auth/[...nextauth]/route";
-import { NoItemsBookings} from "../components/NoItems";
+import { NoItemsBookings } from "../components/NoItems";
 import { CardListing } from "../components/CardListing";
 import { SkeletonCard } from "../components/SkeletonCard";
 import Link from "next/link";
@@ -30,9 +29,12 @@ const fetchData = async ({ userId }: { userId: string | undefined }) => {
     ...home,
     isInFavoriteList: home.favourites.length > 0,
   }));
-  processedData.forEach((home) => delete home.favourites);
+  const newData = processedData.map((home) => {
+    const { favourites, ...newHome } = home;
+    return newHome;
+  });
 
-  return processedData;
+  return newData;
 };
 
 export default async function Home({
@@ -50,7 +52,7 @@ export default async function Home({
 }
 
 async function ShowData() {
-  const session = await getServerSession(OPTIONS);
+  const session = await getServerSession();
   const email = session?.user?.email;
   const userId = await prisma.user.findUnique({
     where: { email: email as string },

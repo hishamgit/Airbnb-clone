@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/app/lib/db";
 
-export const OPTIONS:NextAuthOptions = {
+ const OPTIONS:NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
@@ -25,5 +25,5 @@ export const OPTIONS:NextAuthOptions = {
   },
   debug: true,  // Enable debug mode
 };
-export const handler = NextAuth(OPTIONS);
+const handler = NextAuth(OPTIONS);
 export { handler as GET, handler as POST };
