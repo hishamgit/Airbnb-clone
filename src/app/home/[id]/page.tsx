@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import MapHome from "@/app/components/MapHome";
-import Calender from "@/app/components/calender";
+import Calender from "@/app/components/Calender";
 import { createReservation } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import prisma from "./lib/db";
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "./api/auth/[...nextauth]/route";
@@ -30,7 +30,7 @@ export async function createHome() {
         userId: id?.id,
       },
     });
-    return redirect(`/create/${newHome.id}/structure`);
+    redirect(`/create/${newHome.id}/structure`);
   } else if (
     !home.addedCategory &&
     !home.addedDescription &&
@@ -55,12 +55,11 @@ export async function createHome() {
         userId: id?.id,
       },
     });
-    return redirect(`/create/${newHome.id}/structure`);
+    redirect(`/create/${newHome.id}/structure`);
   }
 }
 
 export async function createCategoryPage(formData: FormData) {
-  console.log(formData.get("categoryName"), "category here");
   const data = await prisma.home.update({
     where: {
       id: formData.get("homeId") as string,
@@ -111,14 +110,12 @@ export async function createDescription(formData: FormData) {
 export async function createLocation(formData: FormData) {
   const homeId = formData.get("homeId") as string;
   const locationValue = formData.get("locationValue") as string;
-  const { getCountryByValue } = useCountries();
-  const location = getCountryByValue(locationValue)?.value;
   const res = await prisma.home.update({
     where: {
       id: homeId,
     },
     data: {
-      country: location,
+      country: locationValue,
       addedLocation: true,
     },
   });
