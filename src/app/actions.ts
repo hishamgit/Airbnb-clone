@@ -5,7 +5,6 @@ import prisma from "./lib/db";
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "./api/auth/[...nextauth]/route";
 import { supabase } from "@/lib/supabase";
-import { useCountries } from "./lib/getCountries";
 import { revalidatePath } from "next/cache";
 
 export async function createHome() {

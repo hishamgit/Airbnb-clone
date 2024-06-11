@@ -5,11 +5,11 @@ import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import MapHome from "@/app/components/MapHome";
-import Calender from "@/app/components/Calender";
 import { createReservation } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CreateReservationButton } from "@/app/components/SubmitButtons";
+import Calender from "@/app/components/Calender";
 
 const fetchData = async (id: string) => {
   const data = await prisma.home.findUnique({
